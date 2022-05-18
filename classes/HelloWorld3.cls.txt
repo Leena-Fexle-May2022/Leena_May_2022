@@ -1,0 +1,10 @@
+class HelloWorld3
+{
+    public:
+    string s;
+    void get()
+    {
+        s="Hello World 3";
+        cout<<s;
+    }
+};
