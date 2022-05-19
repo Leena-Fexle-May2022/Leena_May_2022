@@ -2,11 +2,13 @@ class HelloWorld3
 {
     public:
     string s;
+    int j=10;
     int i;
     void get()
     {
         s="Hello World 3";
         cout<<s;
+        cout<<j;
         cout<<i;
     }
 };
