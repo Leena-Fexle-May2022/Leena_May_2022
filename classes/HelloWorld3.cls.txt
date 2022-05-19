@@ -5,6 +5,7 @@ class HelloWorld3
     int j=10;
     int i;
     int x=20;
+    int a=9;
     void get()
     {
         s="Hello World 3";
@@ -12,5 +13,6 @@ class HelloWorld3
         cout<<j;
         cout<<i;
         cout<<x;
+        cout<<a;
     }
 };
