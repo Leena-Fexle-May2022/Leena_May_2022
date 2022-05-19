@@ -4,11 +4,13 @@ class HelloWorld3
     string s;
     int j=10;
     int i;
+    int x=20;
     void get()
     {
         s="Hello World 3";
         cout<<s;
         cout<<j;
         cout<<i;
+        cout<<x;
     }
 };
