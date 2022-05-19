@@ -1,8 +1,5 @@
 class HelloWorld1
 {
-   public HelloWorld1()
-{
-	string str="Hello World";
+ string str="Hello World";
    cout<<str;
-}
 }
