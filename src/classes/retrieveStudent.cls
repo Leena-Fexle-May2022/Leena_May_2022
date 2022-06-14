@@ -9,7 +9,7 @@ public class retrieveStudent {
                                         State__c, Bank_Phone_Number__c, Linkedin_Url__c, Credit_Card_Number__c, Date_And_Time__c, Date_Of_Birth__c 
                                         from Student__c limit 5];
 
-		for(Student__c student : studentList)
+	for(Student__c student : studentList)
 		{
 			system.debug('Student Data : ' + student);
 		}  
