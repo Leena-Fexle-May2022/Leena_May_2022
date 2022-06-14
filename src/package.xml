@@ -5,8 +5,8 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexTrigger</name>
+        <members>My_Application</members>
+        <name>CustomApplication</name>
     </types>
     <types>
         <members>*</members>
@@ -14,7 +14,11 @@
     </types>
     <types>
         <members>*</members>
-        <name>ValidationRule</name>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>FlexiPage</name>
     </types>
     <version>54.0</version>
 </Package>
