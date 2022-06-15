@@ -11,7 +11,7 @@ public class retrieveStudent {
 
 	for(Student__c student : studentList)
 	{
-			system.debug('Student Data : ' + student);
+		system.debug('Student Data : ' + student);
 	}  
     }
 
