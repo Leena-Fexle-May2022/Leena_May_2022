@@ -6,15 +6,36 @@
     </types>
     <types>
         <members>*</members>
-        <name>ApexTrigger</name>
-    </types>
-    <types>
-        <members>*</members>
         <name>CustomObject</name>
-    </types>
-    <types>
+   </types>
+   <types>
+	<members>Contact.Pan_Card__c</members>
+	<members>Lead.Account__c</members>
+	<members>Student__c.Year_of_Class__c</members>
+	<name>CustomField</name>
+   </types>
+   <types>
         <members>*</members>
-        <name>ValidationRule</name>
-    </types>
-    <version>54.0</version>
+        <name>CustomTab</name>
+   </types>
+   <types>
+	<members>*</members>
+	<name>GlobalValueSet</name>
+   </types>
+   <types>
+	<members>Student__c-Registrar Layout</members>
+	<members>Student__c-Teacher Layout</members>
+	<members>My_Object__c-My Object Layout</members>
+	<members>Demo__c-Demo Layout</members>	
+	<name>Layout</name>
+   </types>
+   <types>
+	<members>My_Application</members>
+	<name>CustomApplication</name>
+   </types>
+   <types>
+	<members>*</members>
+	<name>FlexiPage</name>
+   </types>
+   <version>54.0</version>
 </Package>
