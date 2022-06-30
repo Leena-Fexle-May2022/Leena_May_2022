@@ -2,8 +2,7 @@ public with sharing class CountryAndStates {
     //Map of continent code for country map with states anfd states map wih districts
     Map<String, Map<String, Map<String, List<String>>>> mapContinentCode = new Map<String, Map<String, Map<String, List<String>>>>();
     public CountryAndStates(){
-        intializingData();
-        
+        intializingData(); //calling private method for intialising data     
     }
 
     // intailising the data in the map
