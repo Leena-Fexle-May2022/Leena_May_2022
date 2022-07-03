@@ -1,13 +1,13 @@
 public with sharing class CountryAndStates {
     //Map of continent code for country map with states anfd states map wih districts
     Map<String, Map<String, Map<String, List<String>>>> mapContinentCode = new Map<String, Map<String, Map<String, List<String>>>>();
+    
     public CountryAndStates(){
-        intializingData(); //calling private method for intialising data     
+        intializingData(); //calling private method for intializing data    
     }
 
     // intailising the data in the map
     private void intializingData(){
-
         List<String> listCountry = new List<String>{'India', 'Australia', 'Germany'};
         //India
         //For Rajasthan
@@ -45,7 +45,6 @@ public with sharing class CountryAndStates {
 
         mapContinentCode.put('AS', mapAsia);
         mapContinentCode.put('EU',mapEurope);
-
     }
 
     //checking if country,state and district starts from same letter
@@ -103,7 +102,7 @@ public with sharing class CountryAndStates {
     }
 
     //finding the district with the greater than max length
-    public void Largestlengthdistrict(Integer maxLength)
+    public void largestLengthDistrict(Integer maxLength)
     {
         List<String> districtAll = new List<String>();
 
