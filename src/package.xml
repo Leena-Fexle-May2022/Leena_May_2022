@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>ConvertSobject</members>
-        <members>CountryAndStates</members>
-        <members>CustomerPurchaseOrder</members>
-        <members>EmployeePurchaseOrder</members>
-        <members>FindObjectType</members>
-        <members>ProcessPurchaseOrder</members>
-        <members>Professor</members>
-        <members>PurchaseOrder</members>
-        <members>University</members>
+        <members>ChildToParent</members>
+        <members>ExceptionHandling</members>
+        <members>ExternalId</members>
+        <members>ParentToChild</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Account.MyExtID__c</members>
+        <name>CustomField</name>
     </types>
     <version>53.0</version>
 </Package>
