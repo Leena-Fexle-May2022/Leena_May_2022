@@ -11,7 +11,7 @@ public with sharing class DynamicCountryStatesDistricts {
         public Country(Decimal code, String nameCountry,String nameState, List<String> listDistricts){
             this.code=code;
             AggregateResult totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Country__r.Name like :nameCountry
-                                    group by State__r.Country__r.Name Limit 1];
+                                            group by State__r.Country__r.Name Limit 1];
             numberOfDistricts= (Decimal)totalDistrict.get('TotalDistricts');                      
             AggregateResult totalState = [Select COUNT(Name) Total_States from State__c where Country__r.Name =:nameCountry 
                                           group by Country__r.Name];
