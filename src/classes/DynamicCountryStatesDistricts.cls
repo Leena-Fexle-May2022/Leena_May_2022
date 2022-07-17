@@ -43,6 +43,9 @@ public with sharing class DynamicCountryStatesDistricts {
     }
     public class DistrictWrapper{
         public String districtName{get;set;}
+        public DistrictWrapper(String districtName){
+            this.districtName = districtName;
+        }
     }
 
     //Constructor with parametrised keyword to update Hierarchy Field
@@ -54,14 +57,13 @@ public with sharing class DynamicCountryStatesDistricts {
             if(!districts.isEmpty()){
                 for(Integer i=0;i<districts.size();i++){
                     List<DistrictWrapper> districtList = new List<DistrictWrapper>();
-                    DistrictWrapper objWrapDistrict = new DistrictWrapper();
-                    objWrapDistrict.districtName=districts[i].Name;
+                    DistrictWrapper objWrapDistrict = new DistrictWrapper(districts[i].Name);
                     districtList.add(objWrapDistrict);
                     for(Integer j=i+1;j<districts.size();j++){
                         if(districts[i].State__r.Name==districts[j].State__r.Name){
-                            objWrapDistrict = new DistrictWrapper();
-                            objWrapDistrict.districtName=districts[++i].Name;
+                            objWrapDistrict = new DistrictWrapper(districts[j].Name);
                             districtList.add(objWrapDistrict);
+                            i++;
                         }
                     }
                    
@@ -72,8 +74,6 @@ public with sharing class DynamicCountryStatesDistricts {
                     districts[i].State__r.Country__r.Hierarchy__c = jsonData; 
                     System.debug('Hierarchy Field on country object '+districts[i].State__r.Country__r.Hierarchy__c); 
                     countryName.add(districts[i].State__r.Country__r);
-                    String countryURL = URL.getSalesforceBaseUrl().toExternalForm()+ '/' +districts[i].State__r.Country__r.id ;
-                    System.debug('Country Url '+countryURL);
                 }
                 update countryName;
             }
@@ -90,8 +90,6 @@ public with sharing class DynamicCountryStatesDistricts {
                         jsonData=Json.serialize(wrapobject);
                         country.Hierarchy__c=jsonData;
                         System.debug('Hierarchy Field on country object '+country.Hierarchy__c);
-                        String countryURL = URL.getSalesforceBaseUrl().toExternalForm()+ '/' +country.id ;
-                        System.debug('Country Url '+countryURL);
                     }
                     update countryName;
                 } 
