@@ -5,19 +5,24 @@ public with sharing class DynamicCountryStatesDistricts {
 
     //Wrapper class
     public class CountryWrapper {
+        String countryName{set;get;}
         Decimal code{set;get;}
         Decimal numberOfDistricts{set;get;}
         Decimal numberOfStates{set;get;}
         List <StateWrapper> stateList = new List <StateWrapper> ();
-        public CountryWrapper(Decimal code, String nameCountry,StateWrapper state){
+        public CountryWrapper(Decimal code, String nameCountry,Set <String> stateList1, Map<String,List<String>> districtList ){
+            this.countryName=nameCountry;
             this.code=code;
             AggregateResult totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Country__r.Name like :nameCountry
                                     group by State__r.Country__r.Name Limit 1];
             numberOfDistricts= (Decimal)totalDistrict.get('TotalDistricts');                      
             AggregateResult totalState = [Select COUNT(Name) Total_States from State__c where Country__r.Name =:nameCountry 
                                           group by Country__r.Name];
-            numberOfStates=(Decimal)totalState.get('Total_States');                              
-            stateList.add(state); 
+            numberOfStates=(Decimal)totalState.get('Total_States');  
+            for( String state:stateList1){
+                StateWrapper objStateWrapper = new StateWrapper(state,districtList.get(state));
+                this.stateList.add(objStateWrapper);
+            }                           
         }
         public CountryWrapper(Decimal code, String nameCountry){
             this.code=code;
@@ -33,12 +38,15 @@ public with sharing class DynamicCountryStatesDistricts {
         List <DistrictWrapper> districtList = new List <DistrictWrapper>();
         String stateName{get; set;}
         Decimal totalDistrict{get; set;}
-        public StateWrapper(String stateName, List <DistrictWrapper> districtList ){
+        public StateWrapper(String stateName, List <String> districtList ){
             this.stateName=stateName;
-            this.districtList=districtList;
             AggregateResult totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Name = :stateName
                                             group by State__r.Name];
             this.totalDistrict =(Decimal)totalDistrict.get('TotalDistricts'); 
+            for( String districtName:districtList){
+                DistrictWrapper objWrapDistrict = new DistrictWrapper(districtName);
+                this.districtList.add(objWrapDistrict);
+            }
         }
     }
     public class DistrictWrapper{
@@ -50,32 +58,35 @@ public with sharing class DynamicCountryStatesDistricts {
 
     //Constructor with parametrised keyword to update Hierarchy Field
     public DynamicCountryStatesDistricts(String start) {
+        Map<id,Country__c> mapOfCountry=new Map<id,Country__c>();
         List<District__c> districts=[select Name, State__r.Name,  State__r.Country__r.Code__c, State__r.Country__r.Name 
                                      from District__c where Name like :start+'%' and State__r.Name like :start+'%' and 
                                      State__r.Country__r.Name like :start+'%'];
         try {
             if(!districts.isEmpty()){
-                for(Integer i=0;i<districts.size();i++){
-                    List<DistrictWrapper> districtList = new List<DistrictWrapper>();
-                    DistrictWrapper objWrapDistrict = new DistrictWrapper(districts[i].Name);
-                    districtList.add(objWrapDistrict);
-                    for(Integer j=i+1;j<districts.size();j++){
-                        if(districts[i].State__r.Name==districts[j].State__r.Name){
-                            objWrapDistrict = new DistrictWrapper(districts[j].Name);
-                            districtList.add(objWrapDistrict);
-                            i++;
-                        }
+                for(District__c districtob :districts){
+                    if(!countryHierarchy.containsKey(districtob.State__r.Country__r.Name)){
+                        countryHierarchy.put(districtob.State__r.Country__r.Name,new Map<String,List <String>>());
                     }
-                   
-                    StateWrapper objStateWrapper = new StateWrapper(districts[i].State__r.Name,districtList);
-                    CountryWrapper wrapobject = new CountryWrapper(districts[i].State__r.Country__r.Code__c,districts[i].State__r.Country__r.Name,
-                                                                  objStateWrapper);
+                    if(!countryHierarchy.get(districtob.State__r.Country__r.Name).containsKey(districtob.State__r.Name)){
+                        countryHierarchy.get(districtob.State__r.Country__r.Name).put(districtob.State__r.Name,new List<String>());
+                    }
+                    if(!countryHierarchy.get(districtob.State__r.Country__r.Name).get(districtob.State__r.Name).contains(districtob.Name)){
+                        countryHierarchy.get(districtob.State__r.Country__r.Name).get(districtob.State__r.Name).add(districtob.Name);
+                    }
+                    System.debug('Map of country: '+countryHierarchy);
+                    CountryWrapper wrapobject = new CountryWrapper(districtob.State__r.Country__r.Code__c,districtob.State__r.Country__r.Name,
+                                                                   countryHierarchy.get(districtob.State__r.Country__r.Name).keyset(),
+                                                                   countryHierarchy.get(districtob.State__r.Country__r.Name));
                     jsonData = Json.serialize(wrapobject);
-                    districts[i].State__r.Country__r.Hierarchy__c = jsonData; 
-                    System.debug('Hierarchy Field on country object '+districts[i].State__r.Country__r.Hierarchy__c); 
-                    countryName.add(districts[i].State__r.Country__r);
+                    districtob.State__r.Country__r.Hierarchy__c = jsonData; 
+                    System.debug('Hierarchy Field on country object '+districtob.State__r.Country__r.Hierarchy__c); 
+                    mapOfCountry.put(districtob.State__r.Country__r.id,districtob.State__r.Country__r);
                 }
-                update countryName;
+                System.debug('Map of country: '+countryHierarchy);
+                if(!mapOfCountry.values().isEmpty()){
+                    update mapOfCountry.values() ;
+                }
             }
             else {
                 throw new NotFoundCountryException();    
