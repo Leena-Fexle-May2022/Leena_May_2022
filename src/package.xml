@@ -9,8 +9,8 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>Account</members>
-        <name>CustomObject</name>
+        <members>Account.Type</members>
+        <name>CustomField</name>
     </types>
     <types>
         <members>Account.Axis_Bank</members>
