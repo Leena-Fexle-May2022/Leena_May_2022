@@ -1,14 +1,16 @@
 public with sharing class AccountTriggerHelper {
-    public static void addAccountPrefix (List<Account> newAccount) {
+    public static void addAccountPrefix (List<Account> newAccount){
         for(Account accounts : newAccount){
             if(accounts.Type==null || accounts.AccountNumber==null){
                 accounts.addError('Account type and Account Number cannot be null');
             }
-            if(accounts.Type=='Saving' && !accounts.AccountNumber.startsWith('SA-') ){
-                accounts.AccountNumber='SA-'+accounts.AccountNumber;
-            }
-            if(accounts.Type=='Fixed Deposit' && !accounts.AccountNumber.startsWith('FD-')){
-                accounts.AccountNumber='FD-'+accounts.AccountNumber;
+            if(accounts.Type !=null && accounts.AccountNumber!=null){
+                if(accounts.Type=='Saving' && !accounts.AccountNumber.startsWith('SA-') ){
+                    accounts.AccountNumber='SA-'+accounts.AccountNumber;
+                }
+                if(accounts.Type=='Fixed Deposit' && !accounts.AccountNumber.startsWith('FD-')){
+                    accounts.AccountNumber='FD-'+accounts.AccountNumber;
+                }
             }
         }
     }
