@@ -24,8 +24,11 @@ public with sharing class AccountTriggerHelper {
         }
         Messaging.sendEmail(mails);
     }  
-    public static void checkUpdate(List<Account> newAccount, List<Account> oldAccount){
-        system.debug('Check Update List ::: Trigger.New ' + newAccount);
-        system.debug('Check Update List ::: Trigger.old ' + oldAccount);
+    public static void checkContextVariable(List<Account> newAccount, List<Account> oldAccount, System.TriggerOperation operation, Map<id,Account> newMap,  Map<id,Account> oldMap){
+        system.debug('operation type : '+ operation);
+        system.debug('Check  List ::: Trigger.New ' + newAccount);
+        system.debug('Check List ::: Trigger.old ' + oldAccount);
+        system.debug('Check  List ::: Trigger.NewMap' + newMap);
+        system.debug('Check List ::: Trigger.oldMap' + oldMap);
     }   
 }

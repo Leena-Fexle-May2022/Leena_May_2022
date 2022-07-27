@@ -4,14 +4,36 @@
   *  Created Date    :    2022/07/20
   *  Revision Logs   :    V_1.0 - Created - 2022/07/19
 */
-trigger Trigger_Account on Account (before insert, after insert,before update) {
-    if(Trigger.isInsert && Trigger.isAfter){
-        AccountTriggerHelper.afterInsertMail(Trigger.New);       
+trigger Trigger_Account on Account (before insert, after insert,before update, after update, after delete, before delete, after undelete) {
+    if(Trigger.isAfter){
+        if(Trigger.isInsert){
+            AccountTriggerHelper.afterInsertMail(Trigger.New);
+            AccountTriggerHelper.checkContextVariable(Trigger.New,Trigger.Old,Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
+        if(Trigger.isUpdate){
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old,Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
+        if(Trigger.isDelete){
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old,Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
+        if(Trigger.isUndelete){
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old,Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
     }
-    if(Trigger.isInsert && Trigger.isBefore){
-        AccountTriggerHelper.addAccountPrefix(Trigger.New);
-    }
-    if(Trigger.isUpdate){
-        AccountTriggerHelper.checkUpdate(Trigger.New, Trigger.Old);
+
+    if(Trigger.isBefore){
+        if(Trigger.isInsert){
+            AccountTriggerHelper.addAccountPrefix(Trigger.New);
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old, Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
+        if(Trigger.isUpdate){
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old, Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
+        if(Trigger.isDelete){
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old, Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
+        if(Trigger.isUndelete){
+            AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old, Trigger.operationType,Trigger.newMap, Trigger.oldMap);
+        }
     }
 }
