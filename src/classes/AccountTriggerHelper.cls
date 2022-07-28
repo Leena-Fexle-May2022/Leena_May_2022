@@ -1,14 +1,16 @@
 public with sharing class AccountTriggerHelper {
-    public static void addAccountPrefix (List<Account> newAccount) {
+    public static void addAccountPrefix (List<Account> newAccount){
         for(Account accounts : newAccount){
-            if(accounts.Type==null && accounts.AccountNumber==null){
+            if(accounts.Type==null || accounts.AccountNumber==null){
                 accounts.addError('Account type and Account Number cannot be null');
             }
-            if(accounts.Type=='Saving' && !accounts.AccountNumber.startsWith('SA-') ){
-                accounts.AccountNumber='SA-'+accounts.AccountNumber;
-            }
-            if(accounts.Type=='Fixed Deposit' && !accounts.AccountNumber.startsWith('FD-')){
-                accounts.AccountNumber='FD-'+accounts.AccountNumber;
+            if(accounts.Type !=null && accounts.AccountNumber!=null){
+                if(accounts.Type=='Saving' && !accounts.AccountNumber.startsWith('SA-') ){
+                    accounts.AccountNumber='SA-'+accounts.AccountNumber;
+                }
+                if(accounts.Type=='Fixed Deposit' && !accounts.AccountNumber.startsWith('FD-')){
+                    accounts.AccountNumber='FD-'+accounts.AccountNumber;
+                }
             }
         }
     }
@@ -24,8 +26,11 @@ public with sharing class AccountTriggerHelper {
         }
         Messaging.sendEmail(mails);
     }  
-    public static void checkUpdate(List<Account> newAccount, List<Account> oldAccount){
-        system.debug('Check Update List ::: Trigger.New ' + newAccount);
-        system.debug('Check Update List ::: Trigger.old ' + oldAccount);
+    public static void checkContextVariable(List<Account> newAccount, List<Account> oldAccount, System.TriggerOperation operation, Map<id,Account> newMap,  Map<id,Account> oldMap){
+        system.debug('operation type : '+ operation);
+        system.debug('Check  List ::: Trigger.New ' + newAccount);
+        system.debug('Check List ::: Trigger.old ' + oldAccount);
+        system.debug('Check  List ::: Trigger.NewMap' + newMap);
+        system.debug('Check List ::: Trigger.oldMap' + oldMap);
     }   
 }
