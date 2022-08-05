@@ -3,26 +3,26 @@ public with sharing class OpportunityTriggerHelper {
         if(sensorSet.size()>0){
             if(sensorType == 'Sensor')  {
                 List <Automobile_Sensor__c> autoSensor = [select Name from Automobile_Sensor__c where Name IN :sensorSet ];
-                for(Automobile_Sensor__c s1 : autoSensor){
-                    sensorSet.remove(s1.Name);
+                for(Automobile_Sensor__c sensor : autoSensor){
+                    sensorSet.remove(sensor.Name);
                 }
             }
             else if(sensorType == 'Presence Sensor')  {
             List <Automobile_Presence_Sensor__c> autoSensor = [select Name from Automobile_Presence_Sensor__c where Name IN :sensorSet ];
-            for(Automobile_Presence_Sensor__c s1 : autoSensor){
-                    sensorSet.remove(s1.Name);
+            for(Automobile_Presence_Sensor__c sensor : autoSensor){
+                    sensorSet.remove(sensor.Name);
                 }
             }     
             else if(sensorType == 'TDU Sensor'){
                 List<Automobile_TDU__c> autoSensor = [select Name from Automobile_TDU__c where Name IN :sensorSet ];
-                for(Automobile_TDU__c s1 : autoSensor){
-                    sensorSet.remove(s1.Name);
+                for(Automobile_TDU__c sensor : autoSensor){
+                    sensorSet.remove(sensor.Name);
                 }      
             }
             else if(sensorType == 'Tag Sensor'){
                 List <Automobile_Tag__c> autoSensor = [select Name from Automobile_Tag__c where Name IN :sensorSet ];
-                for(Automobile_Tag__c s1 : autoSensor){
-                    sensorSet.remove(s1.Name);
+                for(Automobile_Tag__c sensor : autoSensor){
+                    sensorSet.remove(sensor.Name);
                 } 
             }
         }
@@ -259,125 +259,130 @@ public with sharing class OpportunityTriggerHelper {
         Map<Id,Automobile_Tag__c> mapTag =new Map<Id,Automobile_Tag__c>();
         Map<Id, User> mapUser;
         List<Id> listOwnerId = new List<Id>();
-        for(Opportunity newOpp : newOppList){
-            if(newOpp.StageName != oldOppMap.get(newOpp.id).StageName){
-                mapOpp.put(newOpp.Id,newOpp);
-                listOwnerId.add(newOpp.OwnerId);
-            }
-        }
-        if(!mapOpp.isEmpty()){
-            mapAutoSensor =new Map<Id,Automobile_Sensor__c>([Select Id, Name, Account__c, Account__r.Name, Opportunity__c from Automobile_Sensor__c where Opportunity__c IN : mapOpp.keySet()]);
-            mapPresenceSensor  =new Map<Id,Automobile_Presence_Sensor__c>([Select Id, Name, Account__c, Account__r.Name, Opportunity__c from Automobile_Presence_Sensor__c where Opportunity__c IN : mapOpp.keySet()]);
-            mapTDU  =new Map<Id,Automobile_TDU__c> ([Select Id, Name, Account__c,Account__r.Name, Opportunity__c from Automobile_TDU__c where Opportunity__c IN : mapOpp.keySet()]);
-            mapTag = new Map<Id,Automobile_Tag__c>([Select Id, Name, Account__c, Account__r.Name, Opportunity__c from Automobile_Tag__c where Opportunity__c IN : mapOpp.keySet()]);
-            mapUser = new  Map<Id, User>([Select Id, Name,Email From User Where Id IN :listOwnerId]);
-        }
-        for(Opportunity opp : mapOpp.values()){
-            List <String> sensorName = new List<String>(); 
-            if(opp.Automobile_Tag_Details_1__c != null){
-                sensorName.addAll(opp.Automobile_Tag_Details_1__c.split('\n'));
-            }
-            if(opp.Automobile_Tag_Details_2__c != null){
-                sensorName.addAll(opp.Automobile_Tag_Details_2__c.split('\n'));
-            }
-            if(opp.Automobile_Tag_Details_3__c != null){
-                sensorName.addAll(opp.Automobile_Tag_Details_3__c.split('\n'));
-            }
-            if(opp.Return_To_HQ__c != null){
-                sensorName.addAll(opp.Return_To_HQ__c.split('\n'));
-            }
-            for(String sensor :sensorName){
-                if(sensor.length()>18){
-                    sensor = sensor.replace(sensor, sensor.substring(0,18));   
+        try{
+            for(Opportunity newOpp : newOppList){
+                if(newOpp.StageName != oldOppMap.get(newOpp.id).StageName){
+                    mapOpp.put(newOpp.Id,newOpp);
+                    listOwnerId.add(newOpp.OwnerId);
                 }
-                sensorName.set(sensorName.indexOf(sensor),sensor.deleteWhitespace()); 
             }
-            if(sensorName.size()>0){
-                Messaging.SingleEmailMessage mail =  new Messaging.SingleEmailMessage();
-                mail.setToAddresses(new List<String>{mapUser.get(opp.OwnerId).Email});
-                System.debug(opp.Owner.Email);
-                String subject = opp.Name+' '+System.today();
-                mail.setSubject(subject);
-                mail.setSenderDisplayName('Leena');
-            
-                String content='Sensor shipment process is completed. Please refer below mentioned details to get all the success and failure details.<br/><br/>Successful:<br/><table border="2">';            
-                String rowDetails='<tr><th>Automobile Type</th><th>Name</th><th>Message</th></tr>';
+            if(!mapOpp.isEmpty()){
+                mapAutoSensor =new Map<Id,Automobile_Sensor__c>([Select Id, Name, Account__c, Account__r.Name, Opportunity__c from Automobile_Sensor__c where Opportunity__c IN : mapOpp.keySet()]);
+                mapPresenceSensor  =new Map<Id,Automobile_Presence_Sensor__c>([Select Id, Name, Account__c, Account__r.Name, Opportunity__c from Automobile_Presence_Sensor__c where Opportunity__c IN : mapOpp.keySet()]);
+                mapTDU  =new Map<Id,Automobile_TDU__c> ([Select Id, Name, Account__c,Account__r.Name, Opportunity__c from Automobile_TDU__c where Opportunity__c IN : mapOpp.keySet()]);
+                mapTag = new Map<Id,Automobile_Tag__c>([Select Id, Name, Account__c, Account__r.Name, Opportunity__c from Automobile_Tag__c where Opportunity__c IN : mapOpp.keySet()]);
+                mapUser = new  Map<Id, User>([Select Id, Name,Email From User Where Id IN :listOwnerId]);
+            }
+            for(Opportunity opp : mapOpp.values()){
+                List <String> sensorName = new List<String>(); 
+                if(opp.Automobile_Tag_Details_1__c != null){
+                    sensorName.addAll(opp.Automobile_Tag_Details_1__c.split('\n'));
+                }
+                if(opp.Automobile_Tag_Details_2__c != null){
+                    sensorName.addAll(opp.Automobile_Tag_Details_2__c.split('\n'));
+                }
+                if(opp.Automobile_Tag_Details_3__c != null){
+                    sensorName.addAll(opp.Automobile_Tag_Details_3__c.split('\n'));
+                }
+                if(opp.Return_To_HQ__c != null){
+                    sensorName.addAll(opp.Return_To_HQ__c.split('\n'));
+                }
+                for(String sensor :sensorName){
+                    if(sensor.length()>18){
+                        sensor = sensor.replace(sensor, sensor.substring(0,18));   
+                    }
+                    sensorName.set(sensorName.indexOf(sensor),sensor.deleteWhitespace()); 
+                }
+                if(sensorName.size()>0){
+                    Messaging.SingleEmailMessage mail =  new Messaging.SingleEmailMessage();
+                    mail.setToAddresses(new List<String>{mapUser.get(opp.OwnerId).Email});
+                    System.debug(opp.Owner.Email);
+                    String subject = opp.Name+' '+System.today();
+                    mail.setSubject(subject);
+                    mail.setSenderDisplayName('Leena');
+                
+                    String content='Sensor shipment process is completed. Please refer below mentioned details to get all the success and failure details.<br/><br/>Successful:<br/><table border="2">';            
+                    String rowDetails='<tr><th>Automobile Type</th><th>Name</th><th>Message</th></tr>';
 
-                for(Automobile_Sensor__c sensor : mapAutoSensor.values()){
-                    if(sensor.Opportunity__c== opp.id ){
-                        sensorName.remove(sensorName.indexOf(sensor.Name));
-                        if(sensor.Account__c == opp.AccountId){
-                            rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
-                        }
-                        else{
-                            rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
+                    for(Automobile_Sensor__c sensor : mapAutoSensor.values()){
+                        if(sensor.Opportunity__c== opp.id ){
+                            sensorName.remove(sensorName.indexOf(sensor.Name));
+                            if(sensor.Account__c == opp.AccountId){
+                                rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
+                            else{
+                                rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
                         }
                     }
-                }
-                for(Automobile_Presence_Sensor__c sensor : mapPresenceSensor.values()){
-                    if(sensor.Opportunity__c== opp.id ){
-                        sensorName.remove(sensorName.indexOf(sensor.Name));
-                        if(sensor.Account__c == opp.AccountId){
-                            rowDetails = rowDetails + '<tr><td>Presence Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
-                        }
-                        else{
-                            rowDetails = rowDetails + '<tr><td>Presence Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
-                        }
-                    }          
-                }
-                for(Automobile_TDU__c sensor : mapTDU.values()){
-                    if(sensor.Opportunity__c== opp.id ){
-                        sensorName.remove(sensorName.indexOf(sensor.Name));
-                        if(sensor.Account__c == opp.AccountId){
-                            rowDetails = rowDetails + '<tr><td>TDU  Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
-                        }
-                        else{
-                            rowDetails = rowDetails + '<tr><td>TDU Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
-                        }
-                    }            
-                }
-                for(Automobile_Tag__c sensor : mapTag.values()){
-                    if(sensor.Opportunity__c== opp.id ){
-                        sensorName.remove(sensorName.indexOf(sensor.Name));
-                        if(sensor.Account__c == opp.AccountId){
-                            rowDetails = rowDetails + '<tr><td> Tag Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
-                        }
-                        else{
-                            rowDetails = rowDetails + '<tr><td> Tag Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
+                    for(Automobile_Presence_Sensor__c sensor : mapPresenceSensor.values()){
+                        if(sensor.Opportunity__c== opp.id ){
+                            sensorName.remove(sensorName.indexOf(sensor.Name));
+                            if(sensor.Account__c == opp.AccountId){
+                                rowDetails = rowDetails + '<tr><td>Presence Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
+                            else{
+                                rowDetails = rowDetails + '<tr><td>Presence Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
+                        }          
+                    }
+                    for(Automobile_TDU__c sensor : mapTDU.values()){
+                        if(sensor.Opportunity__c== opp.id ){
+                            sensorName.remove(sensorName.indexOf(sensor.Name));
+                            if(sensor.Account__c == opp.AccountId){
+                                rowDetails = rowDetails + '<tr><td>TDU  Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
+                            else{
+                                rowDetails = rowDetails + '<tr><td>TDU Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
+                        }            
+                    }
+                    for(Automobile_Tag__c sensor : mapTag.values()){
+                        if(sensor.Opportunity__c== opp.id ){
+                            sensorName.remove(sensorName.indexOf(sensor.Name));
+                            if(sensor.Account__c == opp.AccountId){
+                                rowDetails = rowDetails + '<tr><td> Tag Sensor</td><td>'+sensor.Name+'</td><td>Sensor inserted under installation account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
+                            else{
+                                rowDetails = rowDetails + '<tr><td> Tag Sensor</td><td>'+sensor.Name+'</td><td>Sensor moved from installation account to Shipment account : '+sensor.Account__r.Name+'</td></tr>';
+                            }
                         }
                     }
-                }
-                content = content+rowDetails+'</table>'+'<br/>';
-                if(!sensorName.isEmpty()){
-                    content = content + 'unsucessfull <br/> <table border="2"> ';
-                    rowDetails = '<tr><th>Automobile Type</th><th>Name</th><th>Message</th></tr>';
-                    for(String unsuccessfull : sensorName){
-                        if(unsuccessfull.startsWith('00:11:CE:00')){
-                            rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+unsuccessfull+'</td><td>Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
+                    content = content+rowDetails+'</table>'+'<br/>';
+                    if(!sensorName.isEmpty()){
+                        content = content + 'unsucessfull <br/> <table border="2"> ';
+                        rowDetails = '<tr><th>Automobile Type</th><th>Name</th><th>Message</th></tr>';
+                        for(String unsuccessfull : sensorName){
+                            if(unsuccessfull.startsWith('00:11:CE:00')){
+                                rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+unsuccessfull+'</td><td>Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
 
+                            }
+                            else if(unsuccessfull.startsWith('00:11:CE:D')){
+                                rowDetails = rowDetails + '<tr><td> Presence Sensor</td><td>'+unsuccessfull+'</td><td>Presence Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
+                            }
+                            else if(unsuccessfull.startsWith('00:11:CE:E')){
+                                rowDetails = rowDetails + '<tr><td>TDU Sensor</td><td>'+unsuccessfull+'</td><td>TDU Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
+                            }
+                            else if(unsuccessfull.substring(0,3).isNumeric() && unsuccessfull.indexOf('-',3)==3 && unsuccessfull.indexOf('-',7)==7){
+                                rowDetails = rowDetails + '<tr><td>Tag Sensor</td><td>'+unsuccessfull+'</td><td>Tag Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
+                            }
+                            else{
+                                rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+unsuccessfull+'</td><td> Invalid Sensor not inserted .</td></tr>';
+                            }
                         }
-                        else if(unsuccessfull.startsWith('00:11:CE:D')){
-                            rowDetails = rowDetails + '<tr><td> Presence Sensor</td><td>'+unsuccessfull+'</td><td>Presence Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
-                        }
-                        else if(unsuccessfull.startsWith('00:11:CE:E')){
-                            rowDetails = rowDetails + '<tr><td>TDU Sensor</td><td>'+unsuccessfull+'</td><td>TDU Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
-                        }
-                        else if(unsuccessfull.substring(0,3).isNumeric() && unsuccessfull.indexOf('-',3)==3 && unsuccessfull.indexOf('-',7)==7){
-                            rowDetails = rowDetails + '<tr><td>Tag Sensor</td><td>'+unsuccessfull+'</td><td>Tag Sensor cannot inserted  under installation account because it already exists under the installation account.</td></tr>';
-                        }
-                        else{
-                            rowDetails = rowDetails + '<tr><td>Sensor</td><td>'+unsuccessfull+'</td><td> Invalid Sensor not inserted .</td></tr>';
-                        }
+                        content = content+rowDetails+'</table>';
                     }
-                    content = content+rowDetails+'</table>';
-                }
 
-                mail.setHtmlBody(content);
-                mails.add(mail);  
+                    mail.setHtmlBody(content);
+                    mails.add(mail);  
+                }
+            }
+            if(mails.size()>0){
+                Messaging.sendEmail(mails);   
             }
         }
-        if(mails.size()>0){
-            Messaging.sendEmail(mails);   
+        catch (Exception e){
+            System.debug('Email exception occured'+e.getMessage());
         }
     }
 }
