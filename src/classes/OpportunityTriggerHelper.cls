@@ -157,7 +157,12 @@ public with sharing class OpportunityTriggerHelper {
             if(opp.StageName=='Return to HQ' && (mapOldOpp.get(opp.id).StageName=='Return to customer' || mapOldOpp.get(opp.id).StageName=='Shipped to Customer')){
                 if(opp.Return_to_HQ__c != null){
                     List<String> listSensor = opp.Return_To_HQ__c.split('\n');
-                    System.debug('listSensor = ' + listSensor);
+                    for(String sensor :listSensor){
+                        if(sensor.length()>18){
+                            sensor = sensor.replace(sensor, sensor.substring(0,18));   
+                        }
+                        listSensor.set(listSensor.indexOf(sensor),sensor.deleteWhitespace()); 
+                    }
                     for(Sobject sensor : listObject){
                         if(sensor.get('Opportunity__c') == opp.Id && listSensor.contains((String)sensor.get('Name'))){
                             sensor.put('Account__c', opp.Shipment_Account__c);
