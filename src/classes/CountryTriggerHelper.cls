@@ -1,6 +1,6 @@
 public with sharing class CountryTriggerHelper {
     public static void displayCountryRecords(List<Country__c> newList, Map<Id,Country__c> oldMap){
-        if(oldMap !=null){
+        if(oldMap ==null){
             System.debug('New List');
             for(Country__c countryRec : newList){
                 System.debug('Country Name : '+countryRec.Name + ', Country Code : '+countryRec.Code__c);
