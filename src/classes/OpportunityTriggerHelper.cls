@@ -1,6 +1,6 @@
 public with sharing class OpportunityTriggerHelper {
     public static void checkDuplicateRecords(Set<String> sensorSet, String sensorType){
-        if(sensorSet.size()>0){
+        if(sensorSet != null && !sensorSet.isEmpty()){
             if(sensorType == 'Sensor')  {
                 List <Automobile_Sensor__c> autoSensor = [select Name from Automobile_Sensor__c where Name IN :sensorSet ];
                 for(Automobile_Sensor__c sensor : autoSensor){
@@ -81,60 +81,67 @@ public with sharing class OpportunityTriggerHelper {
             checkDuplicateRecords(setPresenceSensor, 'Presence Sensor');
             checkDuplicateRecords(setTDU, 'TDU Sensor');
             checkDuplicateRecords(setTag,'Tag Sensor');
-            if(setAutoSensor.size()>0){
+            if(!setAutoSensor.isEmpty()){
                 for(String sensor : setAutoSensor){
-                    Automobile_Sensor__c sensorRec = new Automobile_Sensor__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id);
-                    if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
-                        sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
-                    }
-                    else{
-                        sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
-                    }
-                    insertObject.add(sensorRec);
-                }
-            }
-            if(setPresenceSensor.size()>0){ 
-                for(String sensor : setPresenceSensor){
-                    Automobile_Presence_Sensor__c sensorRec = new Automobile_Presence_Sensor__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id );
-                    if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
-                        sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
-                    }
-                    else{
-                        sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
-                    }
-                    insertObject.add(sensorRec);
-                }
-            }
-            if(setTDU.size()>0){
-                for(String sensor : setTDU){
-                    Automobile_TDU__c sensorRec = new Automobile_TDU__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id);
-                    if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
-                        sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
-                    }
-                    else{
-                        sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
-                    }
-                    insertObject.add(sensorRec);
-                }
-            }
-            if(setTag.size()>0){
-                for(String sensor : setTag){
-                    Automobile_Tag__c sensorRec = new Automobile_Tag__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id);
+                    if(mapSensorOpp.containsKey(sensor)){
+                        Automobile_Sensor__c sensorRec = new Automobile_Sensor__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id);
                         if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
-                                sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
+                        }
+                        else{
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
+                        } 
+                    insertObject.add(sensorRec);
+                    }
+                }
+            }
+            if(!setPresenceSensor.isEmpty()){ 
+                for(String sensor : setPresenceSensor){
+                    if(mapSensorOpp.containsKey(sensor)){
+                        Automobile_Presence_Sensor__c sensorRec = new Automobile_Presence_Sensor__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id );
+                        if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
                         }
                         else{
                             sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
                         }
                         insertObject.add(sensorRec);
+                    }
+                }
+            }
+            if(!setTDU.isEmpty()){
+                for(String sensor : setTDU){
+                    if(mapSensorOpp.containsKey(sensor)){
+                        Automobile_TDU__c sensorRec = new Automobile_TDU__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id);
+                        if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
+                        }
+                        else{
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
+                        }
+                        insertObject.add(sensorRec);
+                    }
+                }
+            }
+            if(!setTag.isEmpty()){
+                for(String sensor : setTag){
+                    if(mapSensorOpp.containsKey(sensor)){
+                        Automobile_Tag__c sensorRec = new Automobile_Tag__c(Name = sensor, Opportunity__c = mapSensorOpp.get(sensor).id);
+                        if(mapSensorOpp.get(sensor).StageName == 'Return to HQ'){
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).Shipment_Account__c;
+                        }
+                        else{
+                            sensorRec.Account__c = mapSensorOpp.get(sensor).AccountId;  
+                        }
+                        insertObject.add(sensorRec);
+                    }
                 }
             }
         }
-        if(insertObject!=null){
+        if(!insertObject.isEmpty()){
             insert insertObject;
         }         
     }
-
 
     public static void updateOpportunity(List<Opportunity> newOpp, Map<Id,Opportunity> mapOldOpp){
         List<SObject> listObject = new List<SObject>(); 
@@ -191,7 +198,9 @@ public with sharing class OpportunityTriggerHelper {
                 }
             }
         }
-        update listObject;    
+        if(!listObject.isEmpty()){
+            update listObject; 
+        }    
     }
 
 
@@ -298,7 +307,7 @@ public with sharing class OpportunityTriggerHelper {
                     }
                     sensorName.set(sensorName.indexOf(sensor),sensor.deleteWhitespace()); 
                 }
-                if(sensorName.size()>0){
+                if(!sensorName.isEmpty()){
                     Messaging.SingleEmailMessage mail =  new Messaging.SingleEmailMessage();
                     mail.setToAddresses(new List<String>{mapUser.get(opp.OwnerId).Email});
                     System.debug(opp.Owner.Email);
@@ -382,7 +391,7 @@ public with sharing class OpportunityTriggerHelper {
                     mails.add(mail);  
                 }
             }
-            if(mails.size()>0){
+            if(!mails.isEmpty()){
                 Messaging.sendEmail(mails);   
             }
         }
