@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>AccountTriggerHelper</members>
         <members>ContactTriggerHandler</members>
         <members>DistrictTriggerHelper</members>
         <members>DynamicCountryStatesDistricts</members>
+        <members>PropertyTriggerHelper</members>
         <members>StateTriggerHelper</members>
         <name>ApexClass</name>
     </types>
     <types>
+        <members>Trigger_Account</members>
         <members>Trigger_Contact</members>
         <members>Trigger_District</members>
+        <members>Trigger_Property</members>
         <members>Trigger_State</members>
         <name>ApexTrigger</name>
     </types>

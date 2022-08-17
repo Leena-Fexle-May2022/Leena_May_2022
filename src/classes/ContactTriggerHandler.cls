@@ -24,4 +24,20 @@ public with sharing class ContactTriggerHandler {
             update listAcc;
         } 
     }
+    public static void contactStatusSync(List<Contact> newList, Map<id,Contact> oldMap){
+        Map<id,String> accIdStatusMap = new Map<id,String>();
+        for(Contact newCon : newList){
+            if(newCon.Status__c != oldMap.get(newCon.Id).Status__c){
+                accIdStatusMap.put(newCon.AccountId,newCon.Status__c);
+            } 
+        }
+        if(!accIdStatusMap.isEmpty()){
+            AccountTriggerHelper.conFlag= false;
+            Map <Id, Account> accMap = new Map <Id, Account> ([Select Status__c, Property__r.Status__c from Account where Id In : accIdStatusMap.keySet()]);
+            for(Account acc : accMap.values()){
+                acc.Status__c = accIdStatusMap.get(acc.Id);
+            }
+            update accMap.values();
+        }
+    }
 }
