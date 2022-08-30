@@ -1,34 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>AccountTriggerHelper</members>
-        <members>ContactTriggerHandler</members>
-        <members>DistrictTriggerHelper</members>
-        <members>DynamicCountryStatesDistricts</members>
-        <members>PropertyTriggerHelper</members>
-        <members>StateTriggerHelper</members>
+        <members>LeadProcessor</members>
+        <members>LeadProcessorTest</members>
+        <members>MixedDMLFuture</members>
+        <members>MixedDMLFutureTest</members>
+        <members>ScheduledApexTestClass</members>
+        <members>TestScheduledApexFromTestMethod</members>
+        <members>Util</members>
         <name>ApexClass</name>
-    </types>
-    <types>
-        <members>Trigger_Account</members>
-        <members>Trigger_Contact</members>
-        <members>Trigger_District</members>
-        <members>Trigger_Property</members>
-        <members>Trigger_State</members>
-        <name>ApexTrigger</name>
-    </types>
-    <types>
-        <members>Account.Property__c</members>
-        <members>Account.Status__c</members>
-        <members>Contact.Status__c</members>
-        <members>Country__c.Count_District__c</members>
-        <members>Country__c.Count_State__c</members>
-        <members>State__c.Count_District__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Property__c</members>
-        <name>CustomObject</name>
     </types>
     <version>53.0</version>
 </Package>
