@@ -11,6 +11,7 @@ trigger Trigger_Account on Account (before insert, after insert,before update, a
             AccountTriggerHelper.checkContextVariable(Trigger.New,Trigger.Old,Trigger.operationType,Trigger.newMap, Trigger.oldMap);
         }
         if(Trigger.isUpdate){
+            AccountTriggerHelper.accountStatusSync(Trigger.New, Trigger.OldMap);
             AccountTriggerHelper.checkContextVariable(Trigger.New, Trigger.Old,Trigger.operationType,Trigger.newMap, Trigger.oldMap);
         }
         if(Trigger.isDelete){
