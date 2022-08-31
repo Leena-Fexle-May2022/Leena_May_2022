@@ -1,5 +1,7 @@
 public with sharing class AccountTriggerHelper {
-    public static void addAccountPrefix (List<Account> newAccount){
+    public static Boolean propertyFlag = true;
+    public static Boolean conFlag = true;
+    public static void addAccountPrefix (List<Account> newAccount) {
         for(Account accounts : newAccount){
             if(accounts.Type==null || accounts.AccountNumber==null){
                 accounts.addError('Account type and Account Number cannot be null');
@@ -32,5 +34,33 @@ public with sharing class AccountTriggerHelper {
         system.debug('Check List ::: Trigger.old ' + oldAccount);
         system.debug('Check  List ::: Trigger.NewMap' + newMap);
         system.debug('Check List ::: Trigger.oldMap' + oldMap);
-    }   
+    }
+    public static void accountStatusSync(List <Account> newList, Map<Id,Account> oldMap){
+        Map<Id,String> accIdStatusMap = new Map<Id,String>(); 
+        Set<Property__c> propertySet = new Set<Property__c>();
+        for(Account newAcc : newList){
+            if(newAcc.Status__c != oldMap.get(newAcc.Id).Status__c){
+                accIdStatusMap.put(newAcc.Id,newAcc.Status__c);
+            }
+        }
+        if(!accIdStatusMap.isEmpty()){
+            Map<Id,Contact> conMap = new Map<Id,Contact>([Select Status__c, AccountId, Account.Property__r.Status__c from Contact where AccountId in :accIdStatusMap.keySet()]);
+            for(Contact con : conMAp.values()){
+                if(conFlag){
+                    con.Status__c = accIdStatusMap.get(con.AccountId);
+                }
+                if(propertyFlag){
+                    PropertyTriggerHelper.accFlag = false;
+                    con.Account.Property__r.Status__c = accIdStatusMap.get(con.AccountId);
+                    propertySet.add(con.Account.Property__r);
+                }
+            }
+            if(conFlag){
+                update conMAp.values();
+            }
+            if(!propertySet.isEmpty()){
+                update new List<Property__c>(propertySet);
+            }
+        }
+    }
 }

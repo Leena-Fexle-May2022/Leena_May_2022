@@ -12,26 +12,36 @@ public with sharing class DynamicCountryStatesDistricts {
         List <StateWrapper> stateList = new List <StateWrapper> ();
         public CountryWrapper(Decimal code, String nameCountry,Set <String> stateList1, Map<String,List<String>> districtList ){
             this.countryName=nameCountry;
-            this.code=code;
-            AggregateResult totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Country__r.Name like :nameCountry
+            this.code=code; 
+            List <AggregateResult> totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Country__r.Name like :nameCountry
                                     group by State__r.Country__r.Name Limit 1];
-            numberOfDistricts= (Decimal)totalDistrict.get('TotalDistricts');                      
-            AggregateResult totalState = [Select COUNT(Name) Total_States from State__c where Country__r.Name =:nameCountry 
+            if(!totalDistrict.isEmpty()){
+                numberOfDistricts= (Decimal)totalDistrict[0].get('TotalDistricts');  
+            }   
+            List <AggregateResult> totalState = [Select COUNT(Name) Total_States from State__c where Country__r.Name =:nameCountry 
                                           group by Country__r.Name];
-            numberOfStates=(Decimal)totalState.get('Total_States');  
-            for( String state:stateList1){
+            if(!totalState.isEmpty()){
+            	numberOfStates=(Decimal)totalState[0].get('Total_States'); 
+            }
+            for(String state:stateList1){
                 StateWrapper objStateWrapper = new StateWrapper(state,districtList.get(state));
                 this.stateList.add(objStateWrapper);
             }                           
         }
         public CountryWrapper(Decimal code, String nameCountry){
             this.code=code;
-            AggregateResult totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Country__r.Name = :nameCountry
+            List <AggregateResult> totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Country__r.Name = :nameCountry
                                             group by State__r.Country__r.Name];
-            numberOfDistricts= (Decimal)totalDistrict.get('TotalDistricts');                      
-            AggregateResult totalState = [Select COUNT(Name) Total_States from State__c where Country__r.Name =:nameCountry 
-                                          group by Country__r.Name];
-            numberOfStates=(Decimal)totalState.get('Total_States');  
+            if(!totalDistrict.isEmpty()){
+                numberOfDistricts= (Decimal)totalDistrict[0].get('TotalDistricts');   
+            }      
+            
+            List <AggregateResult> totalState = [Select COUNT(Name) Total_States from State__c where Country__r.Name =:nameCountry 
+                                          group by Country__r.Name];     
+            if(!totalState.isEmpty()){
+                numberOfStates=(Decimal)totalState[0].get('Total_States'); 
+            }
+            
         }
     }
     public class StateWrapper{
@@ -40,10 +50,12 @@ public with sharing class DynamicCountryStatesDistricts {
         Decimal totalDistrict{get; set;}
         public StateWrapper(String stateName, List <String> districtList ){
             this.stateName=stateName;
-            AggregateResult totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Name = :stateName
+            List <AggregateResult>  totalDistrict =[Select Count(Name) TotalDistricts from District__c where State__r.Name = :stateName
                                             group by State__r.Name];
-            this.totalDistrict =(Decimal)totalDistrict.get('TotalDistricts'); 
-            for( String districtName:districtList){
+            if(!totalDistrict.isEmpty()){
+                this.totalDistrict =(Decimal)totalDistrict[0].get('TotalDistricts'); 
+            }
+            for(String districtName:districtList){
                 DistrictWrapper objWrapDistrict = new DistrictWrapper(districtName);
                 this.districtList.add(objWrapDistrict);
             }
