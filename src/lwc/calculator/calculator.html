@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Calculator">
+        <div>
+          <lightning-input type="number" label="First Number" onchange={changeHandler}></lightning-input>
+          <lightning-input type="number" label="Second Number" onchange={changeHandler}></lightning-input>
+        </div>
+        <div>
+            <lightning-button label="ADD" onclick={handleClick}> </lightning-button>
+            <lightning-button label="SUBSTRACT" onclick={handleClick} ></lightning-button>
+            <lightning-button label="MULTIPLY" onclick={handleClick} ></lightning-button>
+            <lightning-button label="DIVIDE" onclick={handleClick} ></lightning-button>
+        </div>
+        <div>
+            Result: {result}
+        </div>
+      </lightning-card>
+</template>
