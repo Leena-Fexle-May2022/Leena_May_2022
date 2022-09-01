@@ -2,14 +2,16 @@ import { LightningElement } from 'lwc';
 import getContact from '@salesforce/apex/FetchingRecords.getContact';
 import getOpportunity from '@salesforce/apex/FetchingRecords.getOpportunity';
 import getCases from '@salesforce/apex/FetchingRecords.getCases';
+
 export default class DisplayRecords extends LightningElement {
-    connectedCallback(){
-        this.sequentialRecords();
-    }
     listContact;
     listOpp;
     listCase;
-    idAccount='0015i00000PSXEOAA5';
+    idAccount;
+    changeHandler(event){
+        this.idAccount=event.target.value;
+        this.sequentialRecords();
+    }
     column=[{fieldName:'Name', label:'Name'},{fieldName:'Id', label:'Id'}];
     caseColumn=[{fieldName:'Id', label:'Id'},{fieldName:'CaseNumber', label:'Case Number'}];
     sequentialRecords(){

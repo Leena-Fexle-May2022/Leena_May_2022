@@ -1,6 +1,7 @@
 <template>
     <div>
         <lightning-card>
+            <lightning-input label="Enter Account Id" onchange={changeHandler}></lightning-input>
             Contact Table: <br>
             <lightning-datatable data={listContact} columns={column} key-field="id">
             </lightning-datatable> <br>
