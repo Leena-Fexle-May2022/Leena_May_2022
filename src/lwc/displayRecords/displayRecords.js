@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import getContact from '@salesforce/apex/FetchingRecords.getContact';
 import getOpportunity from '@salesforce/apex/FetchingRecords.getOpportunity';
 import getCases from '@salesforce/apex/FetchingRecords.getCases';
@@ -8,8 +8,10 @@ export default class DisplayRecords extends LightningElement {
     listOpp;
     listCase;
     idAccount;
-    changeHandler(event){
-        this.idAccount=event.target.value;
+    handleClick(event){
+        var inp = this.template.querySelector("lightning-input");
+        this.idAccount = inp.value;
+        //this.idAccount=this.template.querySelector('lightning-input');
         this.sequentialRecords();
     }
     column=[{fieldName:'Name', label:'Name'},{fieldName:'Id', label:'Id'}];
