@@ -1,0 +1,22 @@
+<template>
+    <lightning-card title="Tiles of Contacts">
+        <div class="tile">
+        <template for:each={contacts.data} for:item="contact">
+                <c-contact-list-element class="slds-show slds-is-relative" key={contact.Id} contact={contact} onselect={handleSelect}>
+                </c-contact-list-element>
+        </template>
+       </div>
+        <template if:true={selectedContact}>
+            <div class={flexipageRegionWidth} >
+                <div class="slds-text-heading_large">{selectedContact.Name}</div>
+                <p>
+                    <lightning-formatted-phone value={selectedContact.Phone}></lightning-formatted-phone>
+                </p>
+                <p>
+                    <lightning-formatted-email value={selectedContact.Email}></lightning-formatted-email>
+                </p>
+            </div> 
+        </template>
+        Component Width: {flexipageRegionWidth} 
+    </lightning-card>   
+</template>

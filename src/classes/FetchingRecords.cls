@@ -14,4 +14,8 @@ public class FetchingRecords {
         List<Case> listCase = [Select Id, CaseNumber from Case where AccountId = :accId];
         return listCase;
     }
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContactList() {
+        return [SELECT Id,Name,Phone,Email FROM Contact LIMIT 10];
+    }
 }

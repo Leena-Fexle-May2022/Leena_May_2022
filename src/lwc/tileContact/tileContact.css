@@ -1,0 +1,14 @@
+div.LARGE {
+    background: red;
+}
+div.SMALL {
+    background: greenyellow;
+}
+div.MEDIUM {
+    background: yellow;
+}
+.tile{
+    display: flex; 
+    flex-direction: row;
+    flex-wrap: wrap;
+}
