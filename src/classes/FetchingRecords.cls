@@ -11,11 +11,15 @@ public class FetchingRecords {
     }
     @AuraEnabled(cacheable=true)
     public static List<Case> getCases(Id accId){
-        List<Case> listCase = [Select Id, CaseNumber from Case where AccountId = :accId];
+        List<Case> listCase = [Select Id,CaseNumber from Case where AccountId = :accId];
         return listCase;
     }
     @AuraEnabled(cacheable=true)
     public static List<Contact> getContactList() {
         return [SELECT Id,Name,Phone,Email FROM Contact LIMIT 10];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccountList(String input) {
+        return [SELECT Id,Name FROM Account WHERE Name like :'%'+input+'%'];
     }
 }

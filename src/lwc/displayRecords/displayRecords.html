@@ -1,17 +1,20 @@
 <template>
     <div>
-        <lightning-card>
-            <lightning-input label="Enter Account Id"></lightning-input>
+        <lightning-card title="Account Related Records">
+            <lightning-input label="Enter Account"></lightning-input>
             <lightning-button label="Submit" onclick={handleClick}></lightning-button><br>
-            Contact Table: <br>
-            <lightning-datatable data={listContact} columns={column} key-field="id">
-            </lightning-datatable> <br>
-            Opportunity Table:<br>
-            <lightning-datatable data={listOpp} columns={column} key-field="id">
-            </lightning-datatable><br>
-            Case Table <br>
-            <lightning-datatable data={listCase} columns={caseColumn} key-field="id">
-            </lightning-datatable>
+            <lightning-combobox name="AccountList" label="Select Account" value={value} placeholder="Select Account" options={optionsAccount} onchange={handleChange}></lightning-combobox>
+            <div if:true={view}>
+                Contact Table: <br>
+                <lightning-datatable data={listContact} columns={column} key-field="id">
+                </lightning-datatable> <br>
+                Opportunity Table:<br>
+                <lightning-datatable data={listOpp} columns={column} key-field="id">
+                </lightning-datatable><br>
+                Case Table <br>
+                <lightning-datatable data={listCase} columns={caseColumn} key-field="id">
+                </lightning-datatable>
+            </div>
         </lightning-card>
     </div>
 </template>
