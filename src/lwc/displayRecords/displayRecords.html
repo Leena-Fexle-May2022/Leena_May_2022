@@ -1,7 +1,7 @@
 <template>
     <div>
         <lightning-card title="Account Related Records">
-            <lightning-input label="Enter Account"></lightning-input>
+            <lightning-input label="Enter Account Name" placeholder="Enter Account Name"></lightning-input>
             <lightning-button label="Submit" onclick={handleClick}></lightning-button><br>
             <div if:true={view}>
             <lightning-combobox name="AccountList" label="Select Account" value={value} placeholder="Select Account" options={optionsAccount} onchange={handleChange}></lightning-combobox>
