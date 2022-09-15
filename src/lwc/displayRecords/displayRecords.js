@@ -20,7 +20,6 @@ export default class DisplayRecords extends LightningElement {
     handleClick(event){
         this.view=true;
         var inp = this.template.querySelector("lightning-input");
-        console.log('OUTPUT inp.value : ',inp.value);
         this.nameAccount = inp.value;
         getAccountList({input : this.nameAccount})
         .then(result => {
@@ -30,7 +29,6 @@ export default class DisplayRecords extends LightningElement {
                 this.itemList.push({label: listAccounts[i].Name, value: listAccounts[i].Id});
             }
             this.data = this.itemList;
-            
         });
     }
     get optionsAccount() {
