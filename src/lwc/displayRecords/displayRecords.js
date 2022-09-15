@@ -8,6 +8,7 @@ export default class DisplayRecords extends LightningElement {
     listContact;
     listOpp;
     listCase;
+    output;
     @track nameAccount;
     @track data =[];
     @track itemList=[];
@@ -30,6 +31,9 @@ export default class DisplayRecords extends LightningElement {
         .then(result => {
             if(result.length !== 0){
                 this.view=true;
+            }
+            else{
+                this.output="There is no account named "+this.nameAccount;
             }
             let listAccounts = result;
             this.itemList=[];

@@ -21,6 +21,9 @@
                 <lightning-datatable data={listCase} columns={caseColumn} key-field="id">
                 </lightning-datatable>
             </div>
+            <div if:false={view}>
+                {output}
+            </div>
         </lightning-card>
     </div>
 </template>
