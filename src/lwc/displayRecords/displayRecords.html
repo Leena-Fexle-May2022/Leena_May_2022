@@ -3,8 +3,10 @@
         <lightning-card title="Account Related Records">
             <lightning-input label="Enter Account"></lightning-input>
             <lightning-button label="Submit" onclick={handleClick}></lightning-button><br>
-            <lightning-combobox name="AccountList" label="Select Account" value={value} placeholder="Select Account" options={optionsAccount} onchange={handleChange}></lightning-combobox>
             <div if:true={view}>
+            <lightning-combobox name="AccountList" label="Select Account" value={value} placeholder="Select Account" options={optionsAccount} onchange={handleChange}></lightning-combobox>
+            </div>
+            <div if:true={viewTable}>
                 Contact Table: <br>
                 <lightning-datatable data={listContact} columns={column} key-field="id">
                 </lightning-datatable> <br>
