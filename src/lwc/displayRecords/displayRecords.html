@@ -6,13 +6,17 @@
             <div if:true={view}>
             <lightning-combobox name="AccountList" label="Select Account" value={value} placeholder="Select Account" options={optionsAccount} onchange={handleChange}></lightning-combobox>
             </div>
-            <div if:true={viewTable}>
+            <div if:true={viewConTable}>
                 Contact Table: <br>
                 <lightning-datatable data={listContact} columns={column} key-field="id">
                 </lightning-datatable> <br>
+            </div>
+            <div if:true={viewOppTable}>
                 Opportunity Table:<br>
                 <lightning-datatable data={listOpp} columns={column} key-field="id">
                 </lightning-datatable><br>
+            </div>
+            <div if:true={viewCaseTable}>
                 Case Table <br>
                 <lightning-datatable data={listCase} columns={caseColumn} key-field="id">
                 </lightning-datatable>
