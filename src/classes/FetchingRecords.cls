@@ -16,6 +16,10 @@ public class FetchingRecords {
     }
     @AuraEnabled(cacheable=true)
     public static List<Contact> getContactList() {
-        return [SELECT Id,Name,Phone,Email FROM Contact LIMIT 10];
+        return [SELECT Id, Name, Phone, Email FROM Contact LIMIT 10];
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccountList(String input) {
+        return [SELECT Id, Name FROM Account WHERE Name like :'%'+input+'%'];
     }
 }
