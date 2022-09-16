@@ -5,8 +5,7 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>contactListElement</members>
-        <members>tileContact</members>
+        <members>displayRecords</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>53.0</version>
