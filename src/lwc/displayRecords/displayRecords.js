@@ -48,7 +48,6 @@ export default class DisplayRecords extends LightningElement {
     }
     handleChange(event){
         this.idAccount=event.detail.value;
-        this.viewTable=true;
         this.sequentialRecords();
     }
     sequentialRecords(){
